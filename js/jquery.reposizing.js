@@ -26,6 +26,8 @@ var Reposizing = function(options) {
 	};	
 	createNewStyle();
 	createControlElements();
+	if(!$.fn.settings.commands.created)
+	createCommandsList();
 	this.keys = $.extend({},$.fn.reposizing.defaults,options);
 	this.previous;
 	var $that = this;
@@ -145,15 +147,16 @@ var settings = {
 			}
 		},
 		'reposizing':function(){
-			var keyCode = ['shift+r','shift+d','shift+p','ctrl+b','&larr;','&rarr;','&uarr;','&darr;'];
-			var keyUse = ['to (de)activate hover reposizing mode','to (de)activate draggable mode','to (de)activate position mode','beautify element','to decrease element width or to move element left','to increase element width or to move element right ','to decrease element height or to move element up','to increase element height or to move element down'];
+			var keyCode = ['shift+r','shift+d','shift+p',/*'ctrl+b'*/'&larr;','&rarr;','&uarr;','&darr;'];
+			var keyUse = ['to (de)activate hover reposizing mode','to (de)activate draggable mode','to (de)activate position mode',/*'beautify element'*/'to decrease element width or to move element left','to increase element width or to move element right ','to decrease element height or to move element up','to increase element height or to move element down'];
 			var i,html;
 			for(i=0;i<keyCode.length;i++)
 			{
 				html = "<li class='d-set'><pre class='d-set'><code class='d-set'><i class='d-set'>"+keyCode[i]+"</i> : "+keyUse[i]+"</code></pre></li>";
 				$('#cmdList').append(html);
 			}
-		}
+		},
+		created:0
 	},
 	onKeyDown: function(e){
 		var $that = this;
@@ -579,6 +582,27 @@ function dragMe(element) {
 			$e = null;
 		}
 	});
+}
+function createCommandsList(){
+	var div = document.createElement('div');
+	var ul = document.createElement('ul');
+	var a = document.createElement('a');
+	a.setAttribute('href','javascript:void(0);');
+	a.setAttribute('onClick','toggleShow('+div+')');
+	a.setAttribute('class','pull-right');
+	div.setAttribute('id','cmdListContainer');
+	div.setAttribute('class','d-set cmdsList style-4 hide');
+	ul.setAttribute('id','cmdList');
+	ul.innerHTML = "<header>Commands List</header>";
+	ul.setAttribute('class','d-set');
+	ul.style.background = "#e7e7e7";
+	$(div).append(a);
+	$(div).append(ul);
+	$('body').append(div);
+	$.fn.settings.commands.created = 1;
+}
+function toggleShow(el){
+	$(element).toggleClass('hide');
 }
 
 function getElementClass(element)
